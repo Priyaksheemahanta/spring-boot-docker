@@ -6,11 +6,13 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy  # Ensures the DB is ready before starting
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mydb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/crud
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+    restart: always  # Restart if the container crashes
 
   db:
     image: postgres:15
@@ -18,9 +20,16 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_DB: crud
+    ports:
+      - "5432:5432"  # Expose DB for external connections
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d crud"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   pgdata:
