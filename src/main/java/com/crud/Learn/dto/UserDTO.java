@@ -10,5 +10,6 @@ public class UserDTO {
     private Long id;
     private String email;
     private String name;
+    private int cibil_score;
     private int monthly_income;
 }

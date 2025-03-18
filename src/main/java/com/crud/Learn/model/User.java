@@ -26,6 +26,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = true)
+    private Integer cibil_score;
+
     @Column(nullable = false)
     private int monthly_income;
 
